@@ -1,24 +1,28 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../services/useForm";
-import { createStory } from "../services/story-service";
-import { UserContext } from "../services/userContext";
+import { newStory } from "../reducers/story-reducer";
 
 const CreateStory = () => {
-  const [user] = useContext(UserContext);
   const [inputValues, handleChange, setInputValues] = useForm({
     title: "",
     content: "",
   });
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const send = await createStory(inputValues, user);
-      setInputValues({ title: "", content: "" });
-      console.log(send);
-    } catch (err) {
-      alert(err);
-    }
+    dispatch(newStory(inputValues, user));
+    console.log("state dispatched");
+    setInputValues({ title: "", content: "" });
+    // try {
+    //   const send = await createStory(inputValues, user);
+    //   setInputValues({ title: "", content: "" });
+    //   console.log(send);
+    // } catch (err) {
+    //   alert(err);
+    // }
   };
 
   return (

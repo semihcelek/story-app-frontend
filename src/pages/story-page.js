@@ -1,30 +1,32 @@
-import { useContext } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import CreateStory from "../components/create-story";
 import StoryCard from "../components/story-card";
-import { useFetch } from "../services/useFetch";
-import { UserContext } from "../services/userContext";
+import { fetchAllStories } from "../reducers/story-reducer";
 
 const StoryPage = () => {
-  const [user] = useContext(UserContext);
-  const [{ data, loading }] = useFetch("/story/all/json");
+  const { user, stories } = useSelector((state) => state);
+  const dispatch = useDispatch();
 
-  if (user) {
+  useEffect(() => {
+    dispatch(fetchAllStories());
+  }, [dispatch]);
+
+  if (user.token) {
     return (
       <div>
-        {loading ? (
-          <div>...loading</div>
-        ) : (
-          data.map((item) => (
+        <div>
+          <CreateStory />
+        </div>
+        <div>
+          {stories.map((item) => (
             <StoryCard
               key={item.id}
               title={item.title}
               content={item.content}
               authorId={item.authorId}
             />
-          ))
-        )}
-        <div>
-          <CreateStory />
+          ))}
         </div>
       </div>
     );

@@ -18,4 +18,11 @@ const createStory = async ({ title, content }, user) => {
   return response.data;
 };
 
-export { createStory };
+const fetchAll = async () => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_URL}/story/all/json`
+  );
+  return response.data;
+};
+
+export { createStory, fetchAll };

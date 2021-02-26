@@ -1,37 +1,21 @@
-// import React, { useState } from "react";
+import React from "react";
 import { useForm } from "../services/useForm";
-import { login } from "../services/login-service";
-import { useContext } from "react";
-import { UserContext } from "../services/userContext";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../reducers/user-reducer";
 
 const Login = () => {
   const [inputValue, handleChange, setInputValue] = useForm({
     email: "",
     password: "",
   });
-  const [setUser] = useContext(UserContext);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const response = await login(inputValue);
-      console.log(response);
-      setUser(response);
-      window.localStorage.setItem("storyAppUser", JSON.stringify(response));
-      setInputValue({ email: "", password: "" }); //clear input fields
-    } catch (err) {
-      if (err.response.status === 401) {
-        alert("invalid username or password");
-      }
-    }
-  };
-  const restoreUser = () => {
-    const getUserJson = window.localStorage.getItem("storyAppUser");
 
-    if (getUserJson) {
-      const user = JSON.parse(getUserJson);
-      setUser(user);
-    }
+    dispatch(loginUser(inputValue));
+    console.log(dispatch);
+    setInputValue({ email: "", password: "" }); //clear input fields
   };
 
   return (
@@ -57,9 +41,29 @@ const Login = () => {
         />
         <button type="submit">LogIn</button>
       </form>
-      <button onClick={restoreUser}>RestoreUser</button>
+      {/* <button onClick={restoreUser}>RestoreUser</button> */}
     </div>
   );
 };
 
 export default Login;
+
+// try {
+//   const response = await login(inputValue);
+//   console.log(response);
+//   setUser(response);
+//   window.localStorage.setItem("storyAppUser", JSON.stringify(response));
+//   setInputValue({ email: "", password: "" }); //clear input fields
+// } catch (err) {
+//   if (err.response.status === 401) {
+//     alert("invalid username or password");
+//   }
+// }
+// const restoreUser = () => {
+//   const getUserJson = window.localStorage.getItem("storyAppUser");
+
+//   if (getUserJson) {
+//     const user = JSON.parse(getUserJson);
+//   //  setUser(user);
+//   }
+// };

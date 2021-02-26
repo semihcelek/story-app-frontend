@@ -1,8 +1,11 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../reducers/user-reducer";
 import { useForm } from "../services/useForm";
-import { register } from "../services/login-service";
 
 const Register = () => {
+  const dispatch = useDispatch();
+
   const [inputValues, handleChange, setInputValues] = useForm({
     firstName: "",
     lastName: "",
@@ -11,17 +14,13 @@ const Register = () => {
   });
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      await register(inputValues);
-      setInputValues({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-      });
-    } catch (err) {
-      alert(err);
-    }
+    dispatch(registerUser(inputValues));
+    setInputValues({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    });
   };
 
   return (

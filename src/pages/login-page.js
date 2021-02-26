@@ -1,20 +1,26 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Login from "../components/login";
 import Register from "../components/register";
-import { UserContext } from "../services/userContext";
+import { setLocalUser } from "../reducers/user-reducer";
 
 const LoginPage = () => {
-  const [user, setUser] = useContext(UserContext);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const removeSavedToken = () => {
     window.localStorage.removeItem("storyAppUser");
   };
 
   const logOut = () => {
-    setUser(null);
+    console.log("logout user");
+    dispatch(setLocalUser([]));
+    removeSavedToken();
+    // setting logged user to empty array
+    // then removing the saved token,
   };
 
-  if (user) {
+  if (user.token) {
     return (
       <div className="LoginPage">
         <pre>{JSON.stringify(user, null, 4)}</pre>
